@@ -1,0 +1,40 @@
+{
+  "expo": {
+    "name": "Sidehuzle",
+    "slug": "sidehuzle-ui",
+    "scheme": "sidehuzle",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#090B0E"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.sidehuzle.ui"
+    },
+    "android": {
+      "package": "com.sidehuzle.ui",
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "react-native-maps"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
