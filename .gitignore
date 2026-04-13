@@ -106,7 +106,8 @@ logs/
 sidehuzle.log
 .cursor/
 .openclaude/
-.vscode/ 
+.vscode/
+.worktrees/
 node_modules/
 *.zip
 *.png
