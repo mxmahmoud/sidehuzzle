@@ -6,8 +6,8 @@ export type MapPoint = {
 };
 
 export const DEFAULT_CENTER: MapPoint = {
-  latitude: -33.8688,
-  longitude: 151.2093,
+  latitude: 48.2082,
+  longitude: 16.3738,
 };
 
 export function listingCoordinate(index: number, total: number): MapPoint {
@@ -23,6 +23,9 @@ export function listingCoordinate(index: number, total: number): MapPoint {
 export function buildListingPoints(listings: DiscoveryListing[]) {
   return listings.map((listing, index) => ({
     listing,
-    point: listingCoordinate(index, listings.length),
+    point:
+      listing.latitude != null && listing.longitude != null
+        ? { latitude: listing.latitude, longitude: listing.longitude }
+        : listingCoordinate(index, listings.length),
   }));
 }

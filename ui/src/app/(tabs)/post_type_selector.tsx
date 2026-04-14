@@ -65,7 +65,7 @@ export default function PostTypeSelectorRoute() {
 const styles = StyleSheet.create({
   root: { flex: 1, justifyContent: 'center' },
   content: { padding: space.xl, gap: space.lg },
-  eyebrow: { fontSize: 12, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.8 },
+  eyebrow: { fontSize: 12, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0 },
   optionCard: { flexDirection: 'row', alignItems: 'center', gap: space.lg, padding: space.xl, borderRadius: radius.card, borderWidth: 1 },
   iconCircle: { width: 48, height: 48, borderRadius: 24, alignItems: 'center', justifyContent: 'center' },
 });

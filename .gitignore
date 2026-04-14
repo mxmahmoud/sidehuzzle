@@ -1,55 +1,14 @@
-# C extensions
-*.so
+# -----------------------------------------------------------------------------
+# Operating system
+# -----------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
 
-# Backup files
-*~
-*.swp
-
-# Python Specific
-__pycache__/
-*.py[cod]
-*.egg-info/
-*.egg
-*.pyc
-*.pyo
-
-# Packaging
-/build/
-/dist/
-*.zip
-*.rar
-*.tar.gz
-*.tar
-*.wheel
-
-# Virtual Environment
-venv/
-env/
-ENV/
-*.venv
-.venv/
-/.venv
-
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.coverage
-.cache
-nosetests.xml
-coverage.xml
-.htmlcov/
-.pytest_cache/
-
-# Database
-*.pgdump
-*.dump
-
-# Environment variables
-.env
-
-# IDE / Editor specific
+# -----------------------------------------------------------------------------
+# IDEs and editors
+# -----------------------------------------------------------------------------
 .vs/
-.vscode
+.vscode/
 .idea/
 .classpath
 .project
@@ -62,52 +21,130 @@ coverage.xml
 .mr.developer.cfg
 .ropeproject
 
-# OS generated files
-.DS_Store
-Thumbs.db
+# -----------------------------------------------------------------------------
+# Tooling (Cursor, worktrees)
+# -----------------------------------------------------------------------------
+.cursor/
+.openclaude/
+.worktrees/
 
-# MyPy
-.mypy_cache/
-.mypy_cache.json
+# -----------------------------------------------------------------------------
+# Environment and secrets
+# -----------------------------------------------------------------------------
+.env
+.env*.local
+*.pem
+*.apps.googleusercontent.com.json
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
 
-# MyPy HTML reports
-mypy-report/
-
-# Pyre
-.pyre/
-
-# PyType
-.pytype/
-
-# linter
-/.ruff_cache
-
-# Distribution / packaging
+# -----------------------------------------------------------------------------
+# Python
+# -----------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*.pyc
+*.pyo
 .Python
-bin/
-build/
+*.egg
+*.egg-info/
+*.eggs
 develop-eggs/
-dist/
 eggs/
+*.wheel
+bin/
 lib64/
 parts/
 sdist/
 var/
 .installed.cfg
-*.eggs
-
-# Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
 
-*.apps.googleusercontent.com.json
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+*.venv
 
+# Type checkers and linters
+.mypy_cache/
+.mypy_cache.json
+mypy-report/
+.pyre/
+.pytype/
+.ruff_cache/
+
+# -----------------------------------------------------------------------------
+# Testing and coverage
+# -----------------------------------------------------------------------------
+htmlcov/
+.htmlcov/
+.tox/
+.coverage
+.cache
+nosetests.xml
+coverage.xml
+.pytest_cache/
+
+# -----------------------------------------------------------------------------
+# Build, distribution, and archives
+# -----------------------------------------------------------------------------
+build/
+dist/
+*.zip
+*.rar
+*.tar.gz
+*.tar
+
+# -----------------------------------------------------------------------------
+# Node / npm / Yarn
+# -----------------------------------------------------------------------------
+node_modules/
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# -----------------------------------------------------------------------------
+# Expo / React Native (TypeScript)
+# -----------------------------------------------------------------------------
+.expo/
+web-build/
+expo-env.d.ts
+*.tsbuildinfo
+.metro-health-check*
+
+# -----------------------------------------------------------------------------
+# Kotlin / Android / iOS (generated or local)
+# -----------------------------------------------------------------------------
+.kotlin/
+*.orig.*
+ios
+android
+
+# -----------------------------------------------------------------------------
+# Database dumps
+# -----------------------------------------------------------------------------
+*.pgdump
+*.dump
+
+# -----------------------------------------------------------------------------
+# Logs (project)
+# -----------------------------------------------------------------------------
 logs/
 sidehuzle.log
-.cursor/
-.openclaude/
-.vscode/
-.worktrees/
-node_modules/
-*.zip
-*.png
+
+# -----------------------------------------------------------------------------
+# Editor / misc backups
+# -----------------------------------------------------------------------------
+*~
+*.swp
+
+# -----------------------------------------------------------------------------
+# C extensions
+# -----------------------------------------------------------------------------
+*.so

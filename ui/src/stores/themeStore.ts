@@ -8,6 +8,6 @@ export type ThemeState = {
 };
 
 export const useThemeStore = create<ThemeState>((set) => ({
-  preference: 'system',
+  preference: 'light',
   setPreference: (preference) => set({ preference }),
 }));

@@ -30,6 +30,7 @@ export function MapSurface({ style, listings, compact }: Props) {
       provider={Platform.OS === 'android' ? PROVIDER_GOOGLE : undefined}
       style={[styles.map, compact && styles.compact, style]}
       initialRegion={DEFAULT_REGION}
+      zoomControlEnabled={false}
       onPress={() => setSelectedListingId(null)}
     >
       {listingPoints.map(({ listing, point }) => {

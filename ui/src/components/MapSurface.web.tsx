@@ -2,8 +2,8 @@ import 'leaflet/dist/leaflet.css';
 
 import L from 'leaflet';
 import { useEffect, useRef, useState } from 'react';
-import { Platform, StyleSheet, Text, View, type ViewStyle } from 'react-native';
-import { CircleMarker, MapContainer, Marker, TileLayer, Tooltip, useMap } from 'react-leaflet';
+import { StyleSheet, View, type ViewStyle } from 'react-native';
+import { MapContainer, Marker, TileLayer, Tooltip, useMap } from 'react-leaflet';
 import { getMapConfig } from '@/config/map';
 import { buildListingPoints, DEFAULT_CENTER } from '@/data/listingCoordinates';
 import type { DiscoveryListing } from '@/data/listingTypes';
@@ -81,12 +81,20 @@ export function MapSurface({ style, listings, compact }: Props) {
   const mapCfg = getMapConfig(isDark);
 
   return (
-    <View style={[styles.frame, compact && styles.compact, style, { borderColor: c.border_subtle, backgroundColor: c.surface_primary }]}>
+    <View
+      style={[
+        styles.frame,
+        compact && styles.compact,
+        style as object,
+        { borderColor: c.glass_border, backgroundColor: 'transparent' },
+      ]}
+    >
       <MapContainer
         center={[DEFAULT_CENTER.latitude, DEFAULT_CENTER.longitude]}
         zoom={12}
         preferCanvas={false}
         scrollWheelZoom
+        zoomControl={false}
         zoomAnimation={false}
         fadeAnimation={false}
         markerZoomAnimation={false}
@@ -133,7 +141,7 @@ const styles = StyleSheet.create({
     minHeight: 220,
     borderRadius: radius.card,
     overflow: 'hidden',
-    borderWidth: 1,
+    borderWidth: 0,
   },
   compact: { minHeight: 160 },
   map: { width: '100%', height: '100%', minHeight: 220 },

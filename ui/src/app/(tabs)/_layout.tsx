@@ -1,28 +1,38 @@
-import { Tabs } from 'expo-router';
-import { StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { Tabs } from 'expo-router';
+import { Platform, StyleSheet, View, useWindowDimensions } from 'react-native';
+import { WebTopNav } from '@/components/WebTopNav';
 import { useThemeColors } from '@/theme/useThemeColors';
 
 export default function TabsLayout() {
   const c = useThemeColors();
+  const { width } = useWindowDimensions();
+  const isDesktop = Platform.OS === 'web' && width >= 1024;
 
   return (
-    <Tabs
-      screenOptions={{
+    <View style={styles.root}>
+      {isDesktop ? <WebTopNav /> : null}
+      <Tabs
+        screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: c.accent_primary,
         tabBarInactiveTintColor: c.text_secondary,
         tabBarStyle: [
           styles.tabBar,
+          Platform.OS === 'web' && !isDesktop && styles.tabBarWeb,
+          isDesktop && styles.tabBarHidden,
           {
-            backgroundColor: c.surface_elevated,
-            borderTopColor: c.border_subtle,
+            backgroundColor: c.surface_primary,
+            borderTopColor: c.border_glass,
+            // @ts-ignore – web-only
+            WebkitBackdropFilter: 'blur(24px)',
+            backdropFilter: 'blur(24px)',
           },
         ],
         tabBarItemStyle: styles.tabItem,
         tabBarLabelStyle: styles.tabLabel,
       }}
-    >
+        >
       <Tabs.Screen
         name="landing_page"
         options={{
@@ -47,7 +57,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="notifications_list"
         options={{
-          title: 'Alerts',
+          title: 'Notifications',
           tabBarIcon: ({ color, size }) => <Ionicons name="notifications-outline" color={color} size={size} />,
         }}
       />
@@ -58,37 +68,55 @@ export default function TabsLayout() {
           tabBarIcon: ({ color, size }) => <Ionicons name="person-outline" color={color} size={size} />,
         }}
       />
-    </Tabs>
+      </Tabs>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+  },
   tabBar: {
     borderTopWidth: 1,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
     marginHorizontal: 12,
-    marginBottom: 10,
-    height: 72,
+    marginBottom: 2,
+    height: 82,
     position: 'absolute',
-    overflow: 'hidden',
-    paddingTop: 8,
-    paddingBottom: 10,
+    left: 0,
+    right: 0,
+    overflow: 'visible',
+    paddingTop: 6,
+    paddingBottom: 18,
     elevation: 18,
-    shadowColor: '#000',
-    shadowOpacity: 0.24,
-    shadowRadius: 24,
-    shadowOffset: { width: 0, height: 12 },
-    backdropFilter: 'blur(18px)',
+    // shadow* props are deprecated on web – use boxShadow via Platform.select
+    ...Platform.select({
+      web: {
+        boxShadow: '0px 12px 48px rgba(0,0,0,0.24)',
+      },
+      default: {
+        shadowColor: '#000',
+        shadowOpacity: 0.24,
+        shadowRadius: 24,
+        shadowOffset: { width: 0, height: 12 },
+      },
+    }),
+  },
+  tabBarWeb: {
+    marginBottom: 6,
+  },
+  tabBarHidden: {
+    display: 'none',
   },
   tabItem: {
-    paddingTop: 6,
+    paddingTop: 2,
+    paddingBottom: 4,
   },
   tabLabel: {
-    fontSize: 12,
+    fontSize: 11,
+    lineHeight: 14,
     fontWeight: '600',
-  },
-  hiddenWeb: {
-    display: 'none',
   },
 });

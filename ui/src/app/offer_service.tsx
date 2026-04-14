@@ -34,7 +34,7 @@ export default function OfferServiceRoute() {
         <View style={styles.fieldGroup}>
           <Text style={[styles.label, { color: c.text_secondary }]}>Your rate</Text>
           <View style={[styles.inputRow, { backgroundColor: c.surface_elevated, borderColor: c.border_subtle }]}>
-            <Text style={[styles.currency, { color: c.text_secondary }]}>$</Text>
+            <Text style={[styles.currency, { color: c.text_secondary }]}>€</Text>
             <TextInput
               style={[styles.input, { color: c.text_primary }]}
               placeholder="45"
@@ -86,9 +86,9 @@ const styles = StyleSheet.create({
   summary: { gap: space.sm, padding: space.lg, borderRadius: radius.card, borderWidth: 1 },
   summaryBadge: { alignSelf: 'flex-start', borderRadius: radius.chip, paddingHorizontal: 10, paddingVertical: 5 },
   summaryBadgeText: { fontSize: 11, fontWeight: '700' },
-  eyebrow: { fontSize: 12, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.8 },
+  eyebrow: { fontSize: 12, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0 },
   fieldGroup: { gap: space.sm },
-  label: { fontSize: 12, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.8 },
+  label: { fontSize: 12, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0 },
   inputRow: { flexDirection: 'row', alignItems: 'center', borderRadius: radius.button, borderWidth: 1, paddingHorizontal: space.md, height: 48 },
   input: { flex: 1, fontSize: 18, fontWeight: '700' },
   currency: { fontSize: 18, fontWeight: '600', marginRight: space.xs },

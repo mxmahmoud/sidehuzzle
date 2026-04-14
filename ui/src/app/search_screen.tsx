@@ -30,7 +30,7 @@ export default function SearchScreenRoute() {
     <View style={[styles.root, { backgroundColor: c.surface_secondary }]}>
       <Stack.Screen options={{ headerShown: false }} />
       <View style={[styles.header, { paddingTop: insets.top + space.sm, backgroundColor: c.surface_primary, borderBottomColor: c.border_subtle }]}>
-        <Pressable onPress={() => router.back()} style={styles.backBtn} accessibilityRole="button">
+        <Pressable onPress={() => router.back()} style={({ hovered, pressed }) => [styles.backBtn, hovered && { backgroundColor: c.surface_elevated }, pressed && { opacity: 0.85 }]} accessibilityRole="button">
           <Ionicons name="arrow-back" size={22} color={c.text_primary} />
         </Pressable>
         <View style={[styles.inputRow, { backgroundColor: c.surface_elevated, borderColor: c.border_subtle }]}>
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
   filterBtn: { padding: space.sm },
   listContent: { paddingHorizontal: space.lg },
   section: {},
-  sectionTitle: { fontSize: 12, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.8, marginBottom: space.sm, marginTop: space.lg },
+  sectionTitle: { fontSize: 12, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0, marginBottom: space.sm, marginTop: space.lg },
   recentRow: { flexDirection: 'row', alignItems: 'center', gap: space.sm, paddingVertical: space.md, borderBottomWidth: StyleSheet.hairlineWidth },
   recentText: { fontSize: 15 },
   suggestionRow: { flexDirection: 'row', alignItems: 'center', gap: space.sm, paddingVertical: space.md, borderBottomWidth: StyleSheet.hairlineWidth },

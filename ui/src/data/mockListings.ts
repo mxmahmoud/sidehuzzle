@@ -22,9 +22,10 @@ function seedListings(mode: 'job' | 'worker' | 'group'): DiscoveryListing[] {
     mode === 'group' ? ['job', 'worker'] : mode === 'worker' ? ['worker'] : ['job'];
   return Array.from({ length: 24 }, (_, i) => {
     const kind = kinds[i % kinds.length];
-    return {
-      id: `${kind}-${i + 1}`,
-      kind,
+      return {
+        id: `${kind}-${i + 1}`,
+        sourceId: i + 1,
+        kind,
       title:
         kind === 'job'
           ? ['Deep clean 2BR', 'IKEA assembly', 'Dog walking', 'Garden tidy', 'Move-out clean'][i % 5]
@@ -37,7 +38,14 @@ function seedListings(mode: 'job' | 'worker' | 'group'): DiscoveryListing[] {
       rating: 4.2 + (i % 8) * 0.1,
       reviewCount: 12 + i * 3,
       distanceKm: 0.5 + i * 0.3,
+      latitude: null,
+      longitude: null,
+      price: 45 + (i % 5) * 5,
+      priceType: 'per_hour',
+      taskType: kind === 'job' ? 'task' : 'tasker',
+      imageUrl: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=900&q=80',
       imageColor: palette[i % palette.length],
+      trustSignals: kind === 'job' ? ['Verified poster', 'Flexible timing'] : ['Identity checked', 'Repeat clients'],
     };
   });
 }

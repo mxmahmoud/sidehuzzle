@@ -102,7 +102,7 @@ export default function DiscoveryFilterRoute() {
 const styles = StyleSheet.create({
   root: { flex: 1 },
   content: { padding: space.xl, gap: space.sm },
-  sectionTitle: { fontSize: 12, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.8, marginTop: space.lg },
+  sectionTitle: { fontSize: 12, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0, marginTop: space.lg },
   chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: space.sm },
   chip: { borderRadius: radius.chip, borderWidth: 1, paddingHorizontal: space.md, paddingVertical: space.sm },
   chipText: { fontSize: 13, fontWeight: '600' },

@@ -9,7 +9,7 @@ const NAV_ITEMS = [
   { href: '/(tabs)/landing_page', label: 'Home', icon: 'home-outline' },
   { href: '/(tabs)/requests_posts_hub', label: 'Messages', icon: 'chatbubbles-outline' },
   { href: '/(tabs)/post_type_selector', label: 'Post', icon: 'add-circle-outline' },
-  { href: '/(tabs)/notifications_list', label: 'Alerts', icon: 'notifications-outline' },
+  { href: '/(tabs)/notifications_list', label: 'Notifications', icon: 'notifications-outline' },
   { href: '/(tabs)/account_profile', label: 'Account', icon: 'person-outline' },
 ] as const;
 
@@ -26,6 +26,7 @@ function isActiveRoute(pathname: string, href: string) {
 }
 
 export function WebTopNav() {
+  if (Platform.OS !== 'web') return null;
   const c = useThemeColors();
   const router = useRouter();
   const pathname = usePathname();
@@ -34,27 +35,22 @@ export function WebTopNav() {
 
   const nextTheme = preference === 'dark' ? 'light' : preference === 'light' ? 'system' : 'dark';
   const themeLabel = preference === 'dark' ? 'Dark' : preference === 'light' ? 'Light' : 'System';
-  const shellShadow = Platform.OS === 'web' ? shadow.card.boxShadow : undefined;
-
   return (
     <View
       style={[
         styles.shell,
         {
-          backgroundColor: c.surface_elevated,
-          borderBottomColor: c.border_subtle,
-          shadowColor: '#000',
-          shadowOpacity: 0.3,
-          shadowRadius: 24,
-          shadowOffset: { width: 0, height: 14 },
-          elevation: 18,
+          backgroundColor: c.surface_primary,
+          borderBottomColor: c.border_glass,
+          // @ts-ignore – web-only
+          WebkitBackdropFilter: 'blur(24px)',
+          ...(Platform.OS === 'web' ? { boxShadow: shadow.card.boxShadow } : null),
         },
-        shellShadow ? { boxShadow: shellShadow } : null,
       ]}
     >
       <View style={styles.brandGroup}>
         <View style={[styles.brandMark, { backgroundColor: c.surface_selected, borderColor: c.border_subtle }]}>
-          <Ionicons name="sparkles" size={14} color={c.accent_primary} />
+          <Ionicons name="map-outline" size={14} color={c.accent_primary} />
         </View>
         <Text style={[styles.brand, { color: c.text_primary }]}>Sidehuzle</Text>
       </View>
@@ -65,7 +61,12 @@ export function WebTopNav() {
             <Pressable
               key={item.href}
               onPress={() => router.push(item.href)}
-              style={[styles.navItem, active && { backgroundColor: c.surface_selected, borderColor: c.border_strong }]}
+              style={({ hovered, pressed }) => [
+                styles.navItem,
+                active && { backgroundColor: c.surface_selected, borderColor: c.border_strong },
+                hovered && { backgroundColor: c.surface_overlay },
+                pressed && { transform: [{ translateY: 1 }], opacity: 0.9 },
+              ]}
               accessibilityRole="link"
             >
               <Ionicons name={item.icon} size={18} color={active ? c.accent_primary : c.text_secondary} />
@@ -90,7 +91,6 @@ const styles = StyleSheet.create({
     height: 64,
     borderBottomWidth: 1,
     gap: space.lg,
-    backdropFilter: 'blur(22px)',
   },
   brandGroup: {
     flexDirection: 'row',
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
   brandMark: {
     width: 28,
     height: 28,
-    borderRadius: 14,
+    borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
   brand: {
     fontSize: 18,
     fontWeight: '800',
-    letterSpacing: -0.4,
+    letterSpacing: 0,
   },
   links: {
     flex: 1,

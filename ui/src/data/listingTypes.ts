@@ -2,6 +2,7 @@ export type ListingKind = 'job' | 'worker';
 
 export type DiscoveryListing = {
   id: string;
+  sourceId: number;
   kind: ListingKind;
   title: string;
   subtitle: string;
@@ -10,12 +11,19 @@ export type DiscoveryListing = {
   rating: number;
   reviewCount: number;
   distanceKm: number;
+  latitude: number | null;
+  longitude: number | null;
+  price: number | null;
+  priceType: TaskPriceType | null;
+  taskType: TaskTaskType | null;
+  imageUrl: string;
   imageColor: string;
+  trustSignals: string[];
 };
 
-export type TaskPriceType = 'hourly' | 'fixed' | 'daily' | 'weekly';
+export type TaskPriceType = 'per_hour' | 'fixed' | 'per_day';
 
-export type TaskTaskType = 'one_time' | 'recurring' | 'asap' | 'professional';
+export type TaskTaskType = 'task' | 'tasker';
 
 export type TaskRecord = {
   id: number;

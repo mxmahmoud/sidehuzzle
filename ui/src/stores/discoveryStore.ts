@@ -25,7 +25,7 @@ export type DiscoveryState = {
 
 export const useDiscoveryStore = create<DiscoveryState>((set) => ({
   viewMode: 'split',
-  listingMode: 'job',
+  listingMode: 'group',
   selectedListingId: null,
   category: 'All',
   sortBy: 'Relevance',

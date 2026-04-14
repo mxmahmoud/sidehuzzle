@@ -1,7 +1,7 @@
 import { apiGet } from '@/data/api'
 
 export async function getCurrentUser() {
-  return apiGet('/users/me')
+  return apiGet('/me')
 }
 
 export async function getUserProfile(userId: string | number) {
