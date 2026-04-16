@@ -6,7 +6,6 @@ import { Platform, Pressable, StyleSheet, Text, View, type ViewStyle } from 'rea
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { GlassCard } from '@/components/GlassCard';
 import { MapSurface } from '@/components/MapSurface';
-import { WebTopNav } from '@/components/WebTopNav';
 import { useDiscoveryListings } from '@/data/listingsQueries';
 import type { DiscoveryListing } from '@/data/listingTypes';
 import { useDiscoveryStore } from '@/stores/discoveryStore';
@@ -301,8 +300,6 @@ export function LandingScreen() {
 
   return (
     <View style={[styles.root, bgStyle.style as object]}>
-      {isWeb && <WebTopNav />}
-
       {/* Hero */}
       <View style={[styles.heroWrap, { paddingTop: isWeb ? space.sm : insets.top + space.sm }]}>
         <GlassCard style={[styles.heroPanel, { paddingHorizontal: space.lg }] as object as ViewStyle}>

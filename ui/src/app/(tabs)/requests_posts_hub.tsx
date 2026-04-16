@@ -99,7 +99,7 @@ export default function RequestsPostsHubRoute() {
 
 const styles = StyleSheet.create({
   root: { flex: 1 },
-  content: { padding: space.xl, gap: space.md },
+  content: { width: '100%', maxWidth: 920, alignSelf: 'center', padding: space.xl, gap: space.md },
   eyebrow: { fontSize: 12, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0 },
   sectionCard: { gap: 4, padding: space.lg, borderRadius: radius.card, borderWidth: 1, marginBottom: space.sm },
   threadRow: { flexDirection: 'row', alignItems: 'center', gap: space.md, padding: space.lg, borderRadius: radius.card, borderWidth: 1 },

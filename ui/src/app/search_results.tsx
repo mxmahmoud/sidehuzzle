@@ -52,7 +52,13 @@ export default function SearchResultsRoute() {
           style={styles.contentLayer}
           data={listings}
           keyExtractor={(item: DiscoveryListing) => item.id}
-          contentContainerStyle={{ paddingHorizontal: space.md, paddingBottom: insets.bottom + space.xl }}
+          contentContainerStyle={{
+            width: '100%',
+            maxWidth: 920,
+            alignSelf: 'center',
+            paddingHorizontal: space.md,
+            paddingBottom: insets.bottom + space.xl,
+          }}
           ItemSeparatorComponent={() => <View style={{ height: space.md }} />}
           ListHeaderComponent={
             <View style={styles.header}>

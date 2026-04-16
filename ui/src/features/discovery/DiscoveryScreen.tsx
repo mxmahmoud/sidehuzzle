@@ -2,11 +2,14 @@ import { FlashList } from '@shopify/flash-list';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useCallback, useMemo, useState } from 'react';
-import { Platform, Pressable, StyleSheet, Text, View, useWindowDimensions, type ViewStyle } from 'react-native';
+import { Platform, Pressable, StyleSheet, Text, TextInput, View, useWindowDimensions, type ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AmbientGlassBackground } from '@/components/AmbientGlassBackground';
+import { AnchoredGlassPanel } from '@/components/AnchoredGlassPanel';
 import { DiscoveryModeControls } from '@/components/DiscoveryModeControls';
+import { GlassButton } from '@/components/GlassButton';
 import { GlassCard } from '@/components/GlassCard';
+import { GlassInputFrame } from '@/components/GlassInputFrame';
 import { ListingCard } from '@/components/ListingCard';
 import { MapSurface } from '@/components/MapSurface';
 import { useDiscoveryListings } from '@/data/listingsQueries';
@@ -66,6 +69,18 @@ const VIEW_OPTIONS: Array<{ value: DiscoveryViewMode; icon: keyof typeof Ionicon
   { value: 'split', icon: 'albums-outline', label: 'Split' },
 ];
 
+const SEARCH_TRENDING = ['Deep cleaning', 'IKEA assembly', 'Dog walking', 'Moving help', 'Garden work', 'Handyman', 'Painting', 'Plumbing'];
+const SEARCH_RECENT = ['Cleaner near Vienna', 'Handyman in Neubau'];
+const CATEGORIES = ['All', 'Cleaning', 'Assembly', 'Moving', 'Garden', 'Handyman', 'Pet care', 'Painting', 'Plumbing', 'Electrical'];
+const SORT_OPTIONS = ['Relevance', 'Price: low to high', 'Price: high to low', 'Rating', 'Distance'];
+const DISTANCES = ['1 km', '5 km', '10 km', '25 km', '50 km'];
+const RATINGS = ['Any', '3+', '4+', '4.5+'];
+const PRICE_PRESETS: Array<{ label: string; value: [number, number] }> = [
+  { label: '€0 - €50', value: [0, 50] },
+  { label: '€50 - €100', value: [50, 100] },
+  { label: '€100+', value: [100, 200] },
+];
+
 function MapViewSwitcher({
   viewMode,
   onChange,
@@ -111,6 +126,8 @@ export function DiscoveryScreen() {
   const isDesktop = Platform.OS === 'web' && width >= 1024;
   const [savedIds, setSavedIds] = useState<Set<string>>(() => new Set());
   const [searchActive, setSearchActive] = useState(false);
+  const [activePanel, setActivePanel] = useState<'search' | 'filter' | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const viewMode = useDiscoveryStore((s) => s.viewMode);
   const listingMode = useDiscoveryStore((s) => s.listingMode);
@@ -123,6 +140,12 @@ export function DiscoveryScreen() {
   const setViewMode = useDiscoveryStore((s) => s.setViewMode);
   const setListingMode = useDiscoveryStore((s) => s.setListingMode);
   const setSelectedListingId = useDiscoveryStore((s) => s.setSelectedListingId);
+  const setCategory = useDiscoveryStore((s) => s.setCategory);
+  const setSortBy = useDiscoveryStore((s) => s.setSortBy);
+  const setPriceRange = useDiscoveryStore((s) => s.setPriceRange);
+  const setDistance = useDiscoveryStore((s) => s.setDistance);
+  const setRating = useDiscoveryStore((s) => s.setRating);
+  const resetFilters = useDiscoveryStore((s) => s.resetFilters);
 
   const filters = useMemo(
     () => ({ category, sortBy, priceRange, distance, rating }),
@@ -136,6 +159,28 @@ export function DiscoveryScreen() {
     [listings, selectedListingId],
   );
 
+  const searchSuggestions = useMemo(() => {
+    const normalized = searchQuery.trim().toLowerCase();
+    if (normalized.length > 1) {
+      return SEARCH_TRENDING.filter((item) => item.toLowerCase().includes(normalized));
+    }
+    return SEARCH_TRENDING;
+  }, [searchQuery]);
+
+  const closePanel = useCallback(() => {
+    setActivePanel(null);
+  }, []);
+
+  const submitSearch = useCallback(
+    (value: string) => {
+      const next = value.trim();
+      if (!next) return;
+      setActivePanel(null);
+      router.push({ pathname: '/search_results', params: { q: next } });
+    },
+    [router],
+  );
+
   const openDetail = useCallback(
     (item: DiscoveryListing) => {
       const pathname = item.kind === 'worker' ? '/worker_description' : '/job_description';
@@ -145,13 +190,20 @@ export function DiscoveryScreen() {
   );
 
   const openSearch = useCallback(() => {
-    setSearchActive(true);
-    if (Platform.OS === 'web') {
-      setTimeout(() => router.push('/search_screen'), 120);
+    if (isDesktop) {
+      setActivePanel('search');
       return;
     }
     router.push('/search_screen');
-  }, [router]);
+  }, [isDesktop, router]);
+
+  const openFilters = useCallback(() => {
+    if (isDesktop) {
+      setActivePanel((current) => (current === 'filter' ? null : 'filter'));
+      return;
+    }
+    router.push('/discovery_filter');
+  }, [isDesktop, router]);
 
   const handleListingModeChange = useCallback(
     (mode: Parameters<typeof setListingMode>[0]) => {
@@ -215,13 +267,39 @@ export function DiscoveryScreen() {
     [handleCardPress, selectedListingId, setSelectedListingId, toggleSave],
   );
 
+  const renderChipGroup = useCallback(
+    (items: string[], value: string, onChange: (next: string) => void) => (
+      <View style={styles.popoverChipRow}>
+        {items.map((item) => (
+          <GlassButton
+            key={item}
+            label={item}
+            variant="chip"
+            selected={value === item}
+            onPress={() => onChange(item)}
+          />
+        ))}
+      </View>
+    ),
+    [],
+  );
+
   return (
     <View style={[styles.root, { backgroundColor: c.background_alt }]}>
       <AmbientGlassBackground />
       <View style={[styles.canvas, isDesktop && styles.canvasDesktop, { paddingTop: topInset, paddingBottom: tabInset }]}>
-        <View style={styles.topBar}>
-          <Text style={[styles.brand, { color: c.text_primary }]}>Sidehuzle</Text>
-          {!isDesktop ? (
+        {activePanel ? (
+          <Pressable
+            onPress={closePanel}
+            accessibilityRole="button"
+            accessibilityLabel="Close search or filter panel"
+            style={styles.popoverScrim}
+          />
+        ) : null}
+
+        {!isDesktop ? (
+          <View style={styles.topBar}>
+            <Text style={[styles.brand, { color: c.text_primary }]}>Sidehuzle</Text>
             <Pressable
               onPress={() => router.push('/options_menu')}
               accessibilityRole="button"
@@ -230,55 +308,172 @@ export function DiscoveryScreen() {
             >
               <Ionicons name="menu" size={22} color={c.text_primary} />
             </Pressable>
-          ) : null}
-        </View>
-        <Text style={[styles.compactHeadline, { color: c.text_primary }]} numberOfLines={2}>
-          {heading}
-        </Text>
+          </View>
+        ) : null}
+        {!isDesktop ? (
+          <Text style={[styles.compactHeadline, { color: c.text_primary }]} numberOfLines={2}>
+            {heading}
+          </Text>
+        ) : null}
 
-        <GlassCard
-          variant="chrome"
-          style={[styles.searchPanel, Platform.OS === 'web' && searchActive ? styles.searchPanelActive : undefined]}
-        >
-          <Pressable
-            onPress={openSearch}
-            onHoverIn={() => setSearchActive(true)}
-            onHoverOut={() => setSearchActive(false)}
-            onFocus={() => setSearchActive(true)}
-            onBlur={() => setSearchActive(false)}
-            accessibilityRole="search"
-            accessibilityHint="Opens the full search experience"
-            style={({ pressed, hovered }) => [
-              styles.searchAction,
-              Platform.OS === 'web' ? styles.searchActionMotion : undefined,
-              hovered && Platform.OS === 'web' ? styles.searchActionHover : undefined,
-              pressed ? styles.pressed : undefined,
-              hovered && Platform.OS === 'web' ? ({ cursor: 'pointer' } as ViewStyle) : undefined,
+        <View style={styles.searchStack}>
+          <GlassCard
+            variant="chrome"
+            style={[
+              styles.searchPanel,
+              Platform.OS === 'web' && (searchActive || activePanel === 'search' || activePanel === 'filter') ? styles.searchPanelActive : undefined,
             ]}
           >
-            <View style={[styles.searchIcon, { backgroundColor: c.surface_selected }]}>
-              <Ionicons name="search" size={18} color={c.accent_primary} />
+            <Pressable
+              onPress={openSearch}
+              onHoverIn={() => setSearchActive(true)}
+              onHoverOut={() => setSearchActive(false)}
+              onFocus={openSearch}
+              accessibilityRole="search"
+              accessibilityHint={isDesktop ? 'Opens search suggestions below this bar' : 'Opens the full search experience'}
+              style={({ pressed, hovered }) => [
+                styles.searchAction,
+                Platform.OS === 'web' ? styles.searchActionMotion : undefined,
+                hovered && Platform.OS === 'web' ? styles.searchActionHover : undefined,
+                pressed ? styles.pressed : undefined,
+                hovered && Platform.OS === 'web' ? ({ cursor: 'pointer' } as ViewStyle) : undefined,
+              ]}
+            >
+              <View style={[styles.searchIcon, { backgroundColor: c.surface_selected }]}>
+                <Ionicons name="search" size={18} color={c.accent_primary} />
+              </View>
+              <View style={styles.searchCopy}>
+                <Text style={[styles.searchTitle, { color: c.text_primary }]} numberOfLines={1}>
+                  Search tasks, skills, places
+                </Text>
+              </View>
+            </Pressable>
+            <GlassButton
+              icon="options-outline"
+              variant="icon"
+              selected={activePanel === 'filter'}
+              onPress={openFilters}
+              accessibilityLabel={isDesktop ? 'Open filters below this bar' : 'Open filters'}
+            />
+          </GlassCard>
+
+          <AnchoredGlassPanel open={activePanel === 'search'} onClose={closePanel} style={styles.searchPopover}>
+            <View style={styles.popoverHeader}>
+              <View>
+                <Text style={[typeStyles.subtitle, { color: c.text_primary }]}>Search nearby</Text>
+                <Text style={[typeStyles.caption, { color: c.text_secondary }]}>Pick a suggestion or type a service.</Text>
+              </View>
+              <GlassButton icon="close" variant="icon" onPress={closePanel} accessibilityLabel="Close search suggestions" />
             </View>
-            <View style={styles.searchCopy}>
-              <Text style={[styles.searchTitle, { color: c.text_primary }]} numberOfLines={1}>
-                Search tasks, skills, places
+            <GlassInputFrame>
+              <TextInput
+                autoFocus={Platform.OS === 'web'}
+                value={searchQuery}
+                onChangeText={setSearchQuery}
+                onSubmitEditing={() => submitSearch(searchQuery)}
+                returnKeyType="search"
+                placeholder="Deep cleaning, moving, dog walking..."
+                placeholderTextColor={c.text_secondary}
+                style={[styles.popoverInput, { color: c.text_primary }]}
+              />
+            </GlassInputFrame>
+            {searchQuery.length === 0 ? (
+              <View style={styles.suggestionSection}>
+                <Text style={[styles.popoverSectionTitle, { color: c.text_secondary }]}>Recent</Text>
+                {SEARCH_RECENT.map((item) => (
+                  <Pressable
+                    key={item}
+                    onPress={() => submitSearch(item)}
+                    style={({ hovered, pressed }) => [
+                      styles.suggestionRow,
+                      { borderColor: c.glass_border },
+                      hovered && Platform.OS === 'web' ? { backgroundColor: c.surface_overlay } : undefined,
+                      pressed ? styles.pressed : undefined,
+                      hovered && Platform.OS === 'web' ? ({ cursor: 'pointer' } as ViewStyle) : undefined,
+                    ]}
+                    accessibilityRole="button"
+                  >
+                    <Ionicons name="time-outline" size={16} color={c.text_secondary} />
+                    <Text style={[styles.suggestionText, { color: c.text_primary }]}>{item}</Text>
+                  </Pressable>
+                ))}
+              </View>
+            ) : null}
+            <View style={styles.suggestionSection}>
+              <Text style={[styles.popoverSectionTitle, { color: c.text_secondary }]}>
+                {searchQuery.length > 1 ? 'Matches' : 'Trending'}
               </Text>
+              {searchSuggestions.length > 0 ? (
+                searchSuggestions.map((item) => (
+                  <Pressable
+                    key={item}
+                    onPress={() => submitSearch(item)}
+                    style={({ hovered, pressed }) => [
+                      styles.suggestionRow,
+                      { borderColor: c.glass_border },
+                      hovered && Platform.OS === 'web' ? { backgroundColor: c.surface_overlay } : undefined,
+                      pressed ? styles.pressed : undefined,
+                      hovered && Platform.OS === 'web' ? ({ cursor: 'pointer' } as ViewStyle) : undefined,
+                    ]}
+                    accessibilityRole="button"
+                  >
+                    <Ionicons name="search-outline" size={16} color={c.accent_primary} />
+                    <Text style={[styles.suggestionText, { color: c.text_primary }]}>{item}</Text>
+                    <Ionicons name="arrow-forward" size={14} color={c.text_secondary} style={{ marginLeft: 'auto' }} />
+                  </Pressable>
+                ))
+              ) : (
+                <Text style={[typeStyles.caption, { color: c.text_secondary }]}>No suggestions yet.</Text>
+              )}
             </View>
-          </Pressable>
-          <Pressable
-            onPress={() => router.push('/discovery_filter')}
-            accessibilityRole="button"
-            accessibilityLabel="Open filters"
-            style={({ pressed, hovered }) => [
-              styles.iconButton,
-              { borderColor: c.border_subtle, backgroundColor: c.surface_primary },
-              pressed ? styles.pressed : undefined,
-              hovered && Platform.OS === 'web' ? ({ cursor: 'pointer' } as ViewStyle) : undefined,
-            ]}
-          >
-            <Ionicons name="options-outline" size={19} color={c.text_primary} />
-          </Pressable>
-        </GlassCard>
+          </AnchoredGlassPanel>
+
+          <AnchoredGlassPanel open={activePanel === 'filter'} onClose={closePanel} style={styles.filterPopover}>
+            <View style={styles.popoverHeader}>
+              <View>
+                <Text style={[typeStyles.subtitle, { color: c.text_primary }]}>Filters</Text>
+                <Text style={[typeStyles.caption, { color: c.text_secondary }]}>Tune the market without leaving discovery.</Text>
+              </View>
+              <GlassButton icon="close" variant="icon" onPress={closePanel} accessibilityLabel="Close filters" />
+            </View>
+            <View style={styles.filterGrid}>
+              <View style={styles.filterSection}>
+                <Text style={[styles.popoverSectionTitle, { color: c.text_secondary }]}>Category</Text>
+                {renderChipGroup(CATEGORIES, category, setCategory)}
+              </View>
+              <View style={styles.filterSection}>
+                <Text style={[styles.popoverSectionTitle, { color: c.text_secondary }]}>Sort by</Text>
+                {renderChipGroup(SORT_OPTIONS, sortBy, setSortBy)}
+              </View>
+              <View style={styles.filterSection}>
+                <Text style={[styles.popoverSectionTitle, { color: c.text_secondary }]}>Budget</Text>
+                <View style={styles.popoverChipRow}>
+                  {PRICE_PRESETS.map((preset) => (
+                    <GlassButton
+                      key={preset.label}
+                      label={preset.label}
+                      variant="chip"
+                      selected={priceRange[0] === preset.value[0] && priceRange[1] === preset.value[1]}
+                      onPress={() => setPriceRange(preset.value)}
+                    />
+                  ))}
+                </View>
+              </View>
+              <View style={styles.filterSection}>
+                <Text style={[styles.popoverSectionTitle, { color: c.text_secondary }]}>Distance</Text>
+                {renderChipGroup(DISTANCES, distance, setDistance)}
+              </View>
+              <View style={styles.filterSection}>
+                <Text style={[styles.popoverSectionTitle, { color: c.text_secondary }]}>Rating</Text>
+                {renderChipGroup(RATINGS, rating, setRating)}
+              </View>
+            </View>
+            <View style={styles.popoverFooter}>
+              <GlassButton label="Reset" icon="refresh-outline" onPress={resetFilters} />
+              <GlassButton label="Apply filters" icon="checkmark" variant="primary" onPress={closePanel} />
+            </View>
+          </AnchoredGlassPanel>
+        </View>
 
         <DiscoveryModeControls
           listingMode={listingMode}
@@ -294,6 +489,8 @@ export function DiscoveryScreen() {
                 minHeight: viewMode === 'list_only' ? 146 : 220,
                 flex: viewMode === 'map_only' ? 1 : undefined,
                 borderColor: c.glass_border,
+                borderTopColor: c.glass_border_top,
+                backgroundColor: c.glass_surface,
               },
             ]}
           >
@@ -320,7 +517,7 @@ export function DiscoveryScreen() {
         ) : null}
 
         {showList ? (
-          <View style={[styles.sheet, { backgroundColor: c.glass_sheet, borderColor: c.glass_border }]}>
+          <View style={[styles.sheet, { backgroundColor: c.glass_sheet, borderColor: c.glass_border, borderTopColor: c.glass_border_top }]}>
             <View style={styles.sheetHandleWrap}>
               <View style={[styles.sheetHandle, { backgroundColor: c.border_strong }]} />
             </View>
@@ -399,6 +596,10 @@ const styles = StyleSheet.create({
     lineHeight: 29,
     fontWeight: '800',
   },
+  popoverScrim: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: 20,
+  },
   menuButton: {
     width: 44,
     height: 44,
@@ -420,6 +621,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: space.sm,
     padding: 4,
+  },
+  searchStack: {
+    position: 'relative',
+    zIndex: 40,
   },
   searchPanelActive: {
     transform: [{ translateY: -3 }],
@@ -475,12 +680,81 @@ const styles = StyleSheet.create({
       default: {},
     }),
   },
+  searchPopover: {
+    gap: space.md,
+  },
+  filterPopover: {
+    gap: space.md,
+    maxHeight: 560,
+  },
+  popoverHeader: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    gap: space.md,
+  },
+  popoverInput: {
+    minHeight: 48,
+    paddingHorizontal: space.md,
+    paddingVertical: space.sm,
+    fontSize: 16,
+    lineHeight: 22,
+  },
+  suggestionSection: {
+    gap: space.sm,
+  },
+  popoverSectionTitle: {
+    fontSize: 12,
+    lineHeight: 16,
+    fontWeight: '800',
+    textTransform: 'uppercase',
+    letterSpacing: 0,
+  },
+  suggestionRow: {
+    minHeight: 44,
+    borderWidth: 1,
+    borderRadius: radius.button,
+    paddingHorizontal: space.md,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: space.sm,
+    ...Platform.select({
+      web: {
+        transitionDuration: `${motion.fastMs}ms`,
+        transitionProperty: 'background-color, opacity, transform',
+        transitionTimingFunction: motion.easeOut,
+      } as ViewStyle,
+      default: {},
+    }),
+  },
+  suggestionText: {
+    fontSize: 14,
+    lineHeight: 20,
+    fontWeight: '700',
+  },
+  filterGrid: {
+    gap: space.md,
+  },
+  filterSection: {
+    gap: space.sm,
+  },
+  popoverChipRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: space.sm,
+  },
+  popoverFooter: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    gap: space.sm,
+    paddingTop: space.sm,
+  },
   mapPanel: {
     overflow: 'hidden',
     borderRadius: radius.sheet,
     borderWidth: 1,
     position: 'relative',
-    backgroundColor: '#C9DDD4',
   },
   mapFill: {
     flex: 1,

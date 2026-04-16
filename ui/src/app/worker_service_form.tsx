@@ -1,45 +1,34 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { zodResolver } from '@/lib/zodResolver';
 import { Picker } from '@react-native-picker/picker';
 import { createTask } from '@/domain/api/taskApi';
 import { taskCreateSchema, type TaskCreate } from '@/data/contract';
 import { useThemeColors } from '@/theme/useThemeColors';
+import { AmbientGlassBackground } from '@/components/AmbientGlassBackground';
 import { GlassCard } from '@/components/GlassCard';
-import { radius, space, type as typeStyles } from '@/theme/tokens';
+import { GlassFormFooter, GlassFormHeader, formLayoutStyles } from '@/components/GlassFormChrome';
+import { GlassInputFrame } from '@/components/GlassInputFrame';
+import { radius, space } from '@/theme/tokens';
 
 
 
 function GlassInput({ error, children }: { error?: string; children: React.ReactNode }) {
-  const c = useThemeColors();
-  const g = { bg: c.glass_surface, border: c.glass_border, borderTop: c.glass_border_top };
   return (
-    <View
-      style={{
-        backgroundColor: g.bg,
-        borderColor: error ? c.accent_warning : g.border,
-        borderWidth: 1,
-        borderRadius: radius.button,
-        overflow: 'hidden',
-      }}
-    >
+    <GlassInputFrame error={error}>
       {children}
-      {error && <Text style={[styles.errorText, { color: c.accent_warning }]}>{error}</Text>}
-    </View>
+    </GlassInputFrame>
   );
 }
 
 export default function WorkerServiceFormRoute() {
   const c = useThemeColors();
   const router = useRouter();
-  const insets = useSafeAreaInsets();
   const [serverError, setServerError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const g = { bg: c.glass_surface, border: c.glass_border, borderTop: c.glass_border_top };
 
   const {
     control,
@@ -82,32 +71,13 @@ export default function WorkerServiceFormRoute() {
   };
 
   return (
-    <View style={[styles.root, { backgroundColor: c.surface_secondary }]}>
-      {/* Glass Header */}
-      <View
-        style={[
-          styles.header,
-          {
-            paddingTop: insets.top + space.sm,
-            backgroundColor: g.bg,
-            borderBottomColor: g.border,
-            // @ts-ignore – web-only
-            WebkitBackdropFilter: 'blur(24px)',
-            backdropFilter: 'blur(24px)',
-          },
-        ]}
-      >
-        <Pressable onPress={() => router.back()} style={styles.backBtn} accessibilityRole="button">
-          <Ionicons name="arrow-back" size={22} color={c.text_primary} />
-        </Pressable>
-        <Text style={[typeStyles.subtitle, { color: c.text_primary, flex: 1 }]}>Offer a service</Text>
-        <View style={[styles.stepBadge, { backgroundColor: g.bg, borderColor: g.border, borderWidth: 1 }]}>
-          <Text style={{ color: c.text_secondary, fontSize: 12, fontWeight: '600' }}>1 of 1</Text>
-        </View>
-      </View>
+    <View style={[styles.root, { backgroundColor: c.background_alt }]}>
+      <Stack.Screen options={{ headerShown: false }} />
+      <AmbientGlassBackground />
+      <GlassFormHeader title="Offer a service" meta="1 of 1" />
 
-      <ScrollView contentContainerStyle={styles.content}>
-        <GlassCard style={{ padding: space.xl, gap: space.xl }}>
+      <ScrollView contentContainerStyle={formLayoutStyles.content} keyboardShouldPersistTaps="handled">
+        <GlassCard variant="elevated" style={{ padding: space.xl, gap: space.xl }}>
           <View style={styles.fieldGroup}>
             <Text style={[styles.label, { color: c.text_secondary }]}>Service title *</Text>
             <Controller
@@ -211,8 +181,8 @@ export default function WorkerServiceFormRoute() {
                         styles.toggleChip,
                         {
                           backgroundColor:
-                            value === type ? 'rgba(255,94,168,0.22)' : g.bg,
-                          borderColor: value === type ? c.pin_worker : g.border,
+                            value === type ? c.surface_selected : c.glass_input,
+                          borderColor: value === type ? c.accent_primary : c.glass_border,
                           borderWidth: 1,
                         },
                       ]}
@@ -220,7 +190,7 @@ export default function WorkerServiceFormRoute() {
                     >
                       <Text
                         style={{
-                          color: value === type ? c.pin_worker : c.text_secondary,
+                          color: value === type ? c.accent_primary : c.text_secondary,
                           fontSize: 13,
                           fontWeight: '600',
                         }}
@@ -252,8 +222,8 @@ export default function WorkerServiceFormRoute() {
                       style={[
                         styles.checkItem,
                         {
-                          backgroundColor: value ? 'rgba(255,94,168,0.18)' : g.bg,
-                          borderColor: value ? c.pin_worker : g.border,
+                          backgroundColor: value ? c.surface_selected : c.glass_input,
+                          borderColor: value ? c.accent_primary : c.glass_border,
                           borderWidth: 1,
                         },
                       ]}
@@ -263,9 +233,9 @@ export default function WorkerServiceFormRoute() {
                       <Ionicons
                         name={value ? 'checkbox' : 'square-outline'}
                         size={16}
-                        color={value ? c.pin_worker : c.text_secondary}
+                        color={value ? c.accent_primary : c.text_secondary}
                       />
-                      <Text style={{ color: value ? c.pin_worker : c.text_secondary, fontSize: 13, fontWeight: '500' }}>
+                      <Text style={{ color: value ? c.accent_primary : c.text_secondary, fontSize: 13, fontWeight: '500' }}>
                         {label}
                       </Text>
                     </Pressable>
@@ -306,39 +276,12 @@ export default function WorkerServiceFormRoute() {
         </GlassCard>
       </ScrollView>
 
-      {/* Glass Footer */}
-      <View
-        style={[
-          styles.footer,
-          {
-            backgroundColor: g.bg,
-            borderTopColor: g.border,
-            // @ts-ignore – web-only
-            WebkitBackdropFilter: 'blur(24px)',
-            backdropFilter: 'blur(24px)',
-            paddingBottom: insets.bottom + space.md,
-          },
-        ]}
-      >
-        <Pressable
-          onPress={handleSubmit(onSubmit)}
-          disabled={isSubmitting}
-          style={[
-            styles.submitBtn,
-            { backgroundColor: isSubmitting ? c.text_secondary : c.accent_primary },
-          ]}
-          accessibilityRole="button"
-        >
-          {isSubmitting ? (
-            <Text style={styles.submitBtnText}>Publishing...</Text>
-          ) : (
-            <>
-              <Ionicons name="checkmark-circle-outline" size={18} color="#FFF" />
-              <Text style={styles.submitBtnText}>Publish service</Text>
-            </>
-          )}
-        </Pressable>
-      </View>
+      <GlassFormFooter
+        primaryLabel={isSubmitting ? 'Publishing...' : 'Publish service'}
+        icon={isSubmitting ? undefined : 'checkmark-circle-outline'}
+        disabled={isSubmitting}
+        onPrimaryPress={handleSubmit(onSubmit)}
+      />
     </View>
   );
 }

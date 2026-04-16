@@ -106,7 +106,7 @@ export default function JobDescriptionRoute() {
 
 const styles = StyleSheet.create({
   root: { flex: 1 },
-  content: { padding: space.xl, gap: space.lg },
+  content: { width: '100%', maxWidth: 920, alignSelf: 'center', padding: space.xl, gap: space.lg },
   hero: { height: 180, borderRadius: radius.card, justifyContent: 'flex-end', padding: space.md },
   heroImage: { borderRadius: radius.card },
   badge: { alignSelf: 'flex-start', borderRadius: radius.chip, paddingHorizontal: 12, paddingVertical: 6, borderWidth: 1 },

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Gigworker Platform Architect"
+  short_description: "Production architecture for SideHuzle"
+  default_prompt: "Use $gigworker-platform-architect to plan and implement production-grade marketplace work."

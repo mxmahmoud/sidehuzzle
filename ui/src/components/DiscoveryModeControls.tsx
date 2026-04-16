@@ -76,6 +76,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     gap: space.sm,
     flexWrap: 'wrap',
   },
@@ -103,7 +104,7 @@ const styles = StyleSheet.create({
   },
   activeButton: {
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.70)',
+    borderColor: 'rgba(255,255,255,0.78)',
   },
   motion: {
     transitionDuration: `${motion.standardMs}ms`,
@@ -112,6 +113,8 @@ const styles = StyleSheet.create({
   } as ViewStyle,
   hovered: {
     transform: [{ translateY: -2 }],
+    // @ts-ignore web-only
+    boxShadow: '0px 14px 34px rgba(17, 41, 34, 0.16), inset 0px 1px 0px rgba(255,255,255,0.36)',
   },
   pressed: {
     opacity: 0.82,

@@ -79,7 +79,7 @@ export function ListingCard({ item, selected, compact, onPress, onPreview, onSav
 
           <View style={styles.signalRow}>
             {item.trustSignals.slice(0, compact ? 1 : 2).map((signal) => (
-              <View key={signal} style={[styles.signalPill, { borderColor: c.border_subtle, backgroundColor: c.surface_primary }]}>
+              <View key={signal} style={[styles.signalPill, { borderColor: c.glass_border, backgroundColor: c.glass_input }]}>
                 <Text style={[styles.signalText, { color: c.text_secondary }]} numberOfLines={1}>
                   {signal}
                 </Text>
@@ -105,7 +105,7 @@ export function ListingCard({ item, selected, compact, onPress, onPreview, onSav
         accessibilityLabel={`Save ${item.title}`}
         style={({ pressed, hovered }) => [
           styles.saveButton,
-          { borderColor: c.border_subtle, backgroundColor: c.surface_primary },
+          { borderColor: c.glass_border, backgroundColor: c.glass_input },
           Platform.OS === 'web' ? styles.saveButtonMotion : undefined,
           hovered && Platform.OS === 'web' ? styles.saveButtonHover : undefined,
           pressed ? styles.pressed : undefined,

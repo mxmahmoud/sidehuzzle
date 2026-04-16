@@ -135,8 +135,8 @@ export default function NotificationsListRoute() {
 
 const styles = StyleSheet.create({
   root: { flex: 1 },
-  content: { padding: space.xl, gap: space.md },
-  center: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: space.xl },
+  content: { width: '100%', maxWidth: 920, alignSelf: 'center', padding: space.xl, gap: space.md },
+  center: { flex: 1, width: '100%', maxWidth: 920, alignSelf: 'center', justifyContent: 'center', alignItems: 'center', padding: space.xl },
   hero: { gap: space.sm, padding: space.lg, borderRadius: radius.card, borderWidth: 1 },
   eyebrow: { fontSize: 12, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0 },
   sectionHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingTop: space.sm },

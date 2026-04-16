@@ -88,7 +88,7 @@ export default function AccountProfileRoute() {
 
 const styles = StyleSheet.create({
   root: { flex: 1 },
-  content: { padding: space.xl, gap: space.lg },
+  content: { width: '100%', maxWidth: 920, alignSelf: 'center', padding: space.xl, gap: space.lg },
   hero: { gap: space.sm, borderRadius: radius.sheet, borderWidth: 1, padding: space.xl, alignItems: 'flex-start' },
   avatar: { width: 64, height: 64, borderRadius: 32, alignItems: 'center', justifyContent: 'center', marginBottom: space.sm },
   eyebrow: { fontSize: 12, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0 },

@@ -73,10 +73,15 @@ export default function RootLayout() {
           title: titleForRoute(name),
           presentation: isModal ? ('modal' as const) : ('card' as const),
           headerStyle: {
-            backgroundColor: c.surface_primary,
+            backgroundColor: c.glass_chrome,
             // Use boxShadow for web (shadow* props are deprecated on web)
             ...(Platform.OS === 'web'
-              ? { boxShadow: shadow.card.boxShadow }
+              ? {
+                  boxShadow: shadow.chrome.boxShadow,
+                  // @ts-ignore web-only glass
+                  WebkitBackdropFilter: `blur(${c.glass_blur_chrome}px)`,
+                  backdropFilter: `blur(${c.glass_blur_chrome}px)`,
+                }
               : {
                   shadowColor: '#000',
                   shadowOffset: { width: 0, height: 8 },

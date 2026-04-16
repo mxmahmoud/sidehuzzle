@@ -8,7 +8,7 @@ export function useThemeColors(): ThemeColors {
 
   if (preference === 'light') return colors.light;
   if (preference === 'dark') return colors.dark;
-  return systemScheme === 'light' ? colors.light : colors.dark;
+  return systemScheme === 'dark' ? colors.dark : colors.light;
 }
 
 export function useIsDark(): boolean {
@@ -17,5 +17,5 @@ export function useIsDark(): boolean {
 
   if (preference === 'light') return false;
   if (preference === 'dark') return true;
-  return systemScheme !== 'light';
+  return systemScheme === 'dark';
 }
