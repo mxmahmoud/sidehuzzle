@@ -45,3 +45,7 @@ For each major surface, cover:
 - Visual smoke checks for glass surfaces where regressions would be costly
 
 Keep tests purposeful and fast enough to run locally. Split slow full-marketplace journeys from focused component or route-level tests when needed.
+
+## Visual Review Rule
+
+When Playwright is used to judge UI appearance, capture and inspect the same surface in both dark mode and light mode. For responsive surfaces, include desktop and mobile screenshots. Do not approve glassmorphism, navigation chrome, overlays, map controls, or landing/discovery changes from a single theme or single viewport.

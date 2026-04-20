@@ -27,6 +27,7 @@ export function MapSurface({ style, listings, compact }: Props) {
 
   return (
     <MapView
+      testID="map-surface"
       provider={Platform.OS === 'android' ? PROVIDER_GOOGLE : undefined}
       style={[styles.map, compact && styles.compact, style]}
       initialRegion={DEFAULT_REGION}

@@ -4,10 +4,11 @@
 
 Build SideHuzle as a production-grade marketplace for customers and freelancers. The product is inspired by TaskRabbit, Airtasker, Airbnb, and Uber, but should form its own opinionated system rather than cloning any one service.
 
-## Architecture Defaults
+## Architecture Posture
 
-- Frontend: shared React Native codebase targeting web, Android, and iOS.
-- Backend: SQL database, FastAPI API layer, Granian runtime.
+- Follow the repo's current frontend and backend foundations unless they are clearly unfit or the user asks to replace them.
+- For the current SideHuzle app, expect a shared React Native/Expo codebase targeting web, Android, and iOS unless the repo proves otherwise.
+- For the current backend, expect SQL plus FastAPI unless the repo proves otherwise.
 - API style: explicit contracts, typed request/response models, role-aware authorization, and predictable error envelopes.
 - Data model: durable relational entities with migrations, constraints, indexes, and lifecycle state machines where state matters.
 - Validation: enforce critical invariants both at API boundaries and the database layer.
@@ -18,8 +19,8 @@ Build SideHuzle as a production-grade marketplace for customers and freelancers.
 - Assume the current project may be messy and may need architectural and UI revision before it becomes the durable standard.
 - Preserve existing code only when it is understandable, tested, cross-platform, and consistent with the intended marketplace direction.
 - Prefer a deliberate new standard over continuing inconsistent hand-written styling or ad hoc abstractions.
-- Adopt Tailwind, NativeWind, or Tailwind-style component primitives when they improve shared design tokens, speed, consistency, and maintainability across web, iOS, and Android.
-- Validate any new styling framework or component approach through one production-quality vertical slice before broad migration.
+- Adopt the project-selected React Native Reusables component direction when it improves shared design tokens, speed, consistency, and maintainability across web, iOS, and Android.
+- Validate any new component or styling approach through one production-quality vertical slice before broad migration.
 - Once the user and Codex are satisfied with a pattern, treat it as the project standard and avoid unnecessary churn.
 
 ## Core Domains

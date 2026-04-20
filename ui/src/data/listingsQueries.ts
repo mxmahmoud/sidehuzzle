@@ -16,6 +16,8 @@ export type DiscoveryFilters = {
 };
 
 function distanceToRadius(distance?: string): number {
+  const parsed = Number.parseFloat(distance ?? '');
+  if (Number.isFinite(parsed)) return parsed;
   if (distance === '1 km') return 1;
   if (distance === '5 km') return 5;
   if (distance === '25 km') return 25;
@@ -54,7 +56,8 @@ export function useDiscoveryListings(listingMode: ListingMode, filters: Discover
       if (listingMode === 'job') params.append('task_type', 'task');
 
       const items = taskSchema.array().parse(await apiGet(`/tasks/search?${params.toString()}`));
-      const minRating = filters.rating === '3+' ? 3 : filters.rating === '4+' ? 4 : filters.rating === '4.5+' ? 4.5 : 0;
+      const parsedRating = filters.rating && filters.rating !== 'Any' ? Number.parseFloat(filters.rating) : 0;
+      const minRating = Number.isFinite(parsedRating) ? parsedRating : 0;
 
       return items
         .map((item, index): DiscoveryListing => taskToListing(item, index))

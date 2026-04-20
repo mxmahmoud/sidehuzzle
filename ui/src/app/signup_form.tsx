@@ -1,11 +1,11 @@
 import { Stack } from 'expo-router'
-import { AuthPanel } from '@/components/AuthPanel'
+import { MarketplaceAuthPanel } from '@/features/marketplace/MarketplaceAuthPanel'
 
 export default function SignupFormRoute() {
   return (
     <>
       <Stack.Screen options={{ headerShown: false }} />
-      <AuthPanel mode="signup" />
+      <MarketplaceAuthPanel mode="signup" />
     </>
   )
 }

@@ -1,0 +1,142 @@
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
+@import "tailwindcss/utilities.css";
+@import "nativewind/theme";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ─── Theme: design tokens (light / dark) ─────────────────────────
+   1. :root              — light defaults (all platforms)
+   2. @media dark :root  — dark defaults; nativewind maps this to
+                           Appearance.getColorScheme() on native.
+   3. :root.dark / :root.light — higher specificity for web class toggle. */
+@layer theme {
+  :root {
+    --primary: #487d3e;
+    --primary-foreground: #f8fff4;
+    --card: #ffffff;
+    --card-foreground: #111411;
+    --secondary: #eef2ed;
+    --secondary-foreground: #1f241f;
+    --background: #f6f7f4;
+    --popover: #ffffff;
+    --popover-foreground: #111411;
+    --muted: #e7ebe5;
+    --muted-foreground: #667266;
+    --destructive: oklch(0.577 0.245 27.325);
+    --foreground: #111411;
+    --border: rgba(17, 20, 17, 0.12);
+    --input: rgba(17, 20, 17, 0.16);
+    --ring: #8bd56f;
+    --accent: #e7ebe5;
+    --accent-foreground: #1f241f;
+    --indicator-info: #487d3e;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --primary: #8bd56f;
+      --primary-foreground: #101211;
+      --card: #222522;
+      --card-foreground: #f5f6f3;
+      --secondary: #2c302c;
+      --secondary-foreground: #f5f6f3;
+      --background: #090a0a;
+      --popover: #222522;
+      --popover-foreground: #f5f6f3;
+      --muted: #2b302b;
+      --muted-foreground: #c2c9c1;
+      --destructive: oklch(0.704 0.191 22.216);
+      --foreground: #f5f6f3;
+      --border: rgba(255, 255, 255, 0.12);
+      --input: rgba(255, 255, 255, 0.18);
+      --accent: #2b302b;
+      --accent-foreground: #f5f6f3;
+      --ring: #8bd56f;
+      --indicator-info: #8bd56f;
+    }
+  }
+
+  :root.dark {
+    --primary: #8bd56f;
+    --primary-foreground: #101211;
+    --card: #222522;
+    --card-foreground: #f5f6f3;
+    --secondary: #2c302c;
+    --secondary-foreground: #f5f6f3;
+    --background: #090a0a;
+    --popover: #222522;
+    --popover-foreground: #f5f6f3;
+    --muted: #2b302b;
+    --muted-foreground: #c2c9c1;
+    --destructive: oklch(0.704 0.191 22.216);
+    --foreground: #f5f6f3;
+    --border: rgba(255, 255, 255, 0.12);
+    --input: rgba(255, 255, 255, 0.18);
+    --accent: #2b302b;
+    --accent-foreground: #f5f6f3;
+    --ring: #8bd56f;
+    --indicator-info: #8bd56f;
+  }
+
+  :root.light {
+    --primary: #487d3e;
+    --primary-foreground: #f8fff4;
+    --card: #ffffff;
+    --card-foreground: #111411;
+    --secondary: #eef2ed;
+    --secondary-foreground: #1f241f;
+    --background: #f6f7f4;
+    --popover: #ffffff;
+    --popover-foreground: #111411;
+    --muted: #e7ebe5;
+    --muted-foreground: #667266;
+    --destructive: oklch(0.577 0.245 27.325);
+    --foreground: #111411;
+    --border: rgba(17, 20, 17, 0.12);
+    --input: rgba(17, 20, 17, 0.16);
+    --ring: #8bd56f;
+    --accent: #e7ebe5;
+    --accent-foreground: #1f241f;
+    --indicator-info: #487d3e;
+  }
+}
+
+@theme inline {
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-background: var(--background);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-destructive: var(--destructive);
+  --color-foreground: var(--foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-indicator-info: var(--indicator-info);
+  --font-sans: "Manrope Variable", system-ui, sans-serif;
+  --font-heading: var(--font-sans);
+  --spacing-side-xs: 4px;
+  --spacing-side-sm: 8px;
+  --spacing-side-md: 12px;
+  --spacing-side-lg: 16px;
+  --spacing-side-xl: 24px;
+  --spacing-side-2xl: 32px;
+  --shadow-hard-5: 0 24px 60px rgba(10, 18, 17, 0.22);
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    font-family: "Manrope Variable", system-ui, sans-serif;
+  }
+}

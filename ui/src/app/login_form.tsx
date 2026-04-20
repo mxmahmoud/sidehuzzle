@@ -1,5 +1,5 @@
 import { Stack } from 'expo-router';
-import { AuthPanel } from '@/components/AuthPanel';
+import { MarketplaceAuthPanel } from '@/features/marketplace/MarketplaceAuthPanel';
 
 export default function LoginFormRoute() {
   return (
@@ -9,7 +9,7 @@ export default function LoginFormRoute() {
           headerShown: false,
         }}
       />
-      <AuthPanel mode="login" />
+      <MarketplaceAuthPanel mode="login" />
     </>
   );
 }

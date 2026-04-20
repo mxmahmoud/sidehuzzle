@@ -1,5 +1,5 @@
-import { MapViewScreen } from '@/features/discovery/MapViewScreen';
+import { MarketplaceMapScreen } from '@/features/marketplace/MarketplaceMapScreen';
 
 export default function MapViewRoute() {
-  return <MapViewScreen />;
+  return <MarketplaceMapScreen />;
 }

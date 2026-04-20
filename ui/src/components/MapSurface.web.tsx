@@ -1,4 +1,4 @@
-import 'leaflet/dist/leaflet.css';
+import './leaflet.web.css';
 
 import L from 'leaflet';
 import { useEffect, useRef, useState } from 'react';
@@ -82,6 +82,7 @@ export function MapSurface({ style, listings, compact }: Props) {
 
   return (
     <View
+      testID="map-surface"
       style={[
         styles.frame,
         compact && styles.compact,
